@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="flex-box">
-      <el-button>
+      <el-button @click="handleCollapse">
         <el-icon><Expand /></el-icon>
       </el-button>
       <p class="page-title">导航栏</p>
@@ -24,11 +24,17 @@
 </template>
 
 <script setup >
+  import { Expand, ArrowDown } from '@element-plus/icons-vue';
   import { ref } from 'vue';
+  import { useAdminStore } from '../stores/admin';
   const handleCommand = (command) => {
     if(command == 'logout') {
       // 退出登录的逻辑
     }
+  }
+
+  const handleCollapse = () => {
+    useAdminStore().toggleCollapse();
   }
 </script>
 
