@@ -6,7 +6,7 @@
         <el-button type="primary">编辑</el-button>
       </template>
     </PageHead>
-    <TableSearch :formItems="formItem" @search="handleSearch"/>
+    <TableSearch :formItem="formItem" @search="handleSearch"/>
   </div>
 </template>
 
@@ -19,13 +19,15 @@ import TableSearch from '@/components/TableSearch.vue';
     { comp: 'select',prop: 'category',label: '分类',placeholder: '请选择文章分类' ,options: [{
       label: '心理健康基础',
       value: 1
-    }, {
+    }, 
+    {
       label: '情绪管理',
       value: 2
     }]},
   ]
 
-  const handleSearch = () => {
-
+  const handleSearch = (searchForm) => {
+    console.log(searchForm);
+    
   }
 </script>
