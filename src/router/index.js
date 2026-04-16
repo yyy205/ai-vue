@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 //路由实例和路由模式
 import BackendLayout from '@/components/BackendLayout.vue'
 
+import AuthLayout from '@/components/AuthLayout.vue'
 //路由配置
 const backendRoutes = [
   {
@@ -42,6 +43,26 @@ const backendRoutes = [
         }
 
       ]
+  },
+  {
+     path: '/auth',
+     component: AuthLayout,
+     children:[
+        {
+          path: 'login',
+          component : () => import('@/views/login.vue'),
+          meta :{
+            title: '登录'
+          }
+        },
+        {
+          path: 'register',
+          component: () => import('@/views/register.vue'),
+          meta: {
+            title: '注册'
+          }
+        },
+     ]
   }
 ]
 const router = createRouter({
