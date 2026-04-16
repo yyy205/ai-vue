@@ -35,6 +35,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { login } from "@/api/admin"
 
 const ruleFormRef = ref()
 
@@ -55,9 +56,19 @@ const rules = reactive({
 
 const submitForm = async (formEl) => {
   if(!formEl) return
-  await formEl.validate((valid,fields) => {
+  await formEl.validate((valid, fields) => {
     if(valid){
-      console.log(fields);
+      login(formData).then(data => {
+        console.log('登录响应数据:', data)
+        if(!data.token){
+          return console.error('登录失败')
+        }
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
+        window.location.href = '/'
+      }).catch(error => {
+        console.error('登录失败', error)
+      })
     }
   })
 }
