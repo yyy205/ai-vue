@@ -28,7 +28,7 @@ service.interceptors.response.use(
     //data拿到的是后端返回的json数据（对象）
     //code是后端返回的状态码
     //data.data是后端返回的数据
-    if(data.code === 200 ){
+    if(data.code === '200' ){
       return data.data
     }else{
       if(data.code === '-1'){
