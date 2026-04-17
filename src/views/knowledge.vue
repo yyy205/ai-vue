@@ -42,7 +42,7 @@
     :total="pageination.total" 
     @change="handleChange"
     />
-    <ArticleDialog v-model:modelValue="dialogVisible" />
+    <ArticleDialog v-model:modelValue="dialogVisible" :categories="categories" />
   </div>
 </template>
 
@@ -99,14 +99,14 @@ const dialogVisible = ref(false)
   onMounted(async () => {
     const data = await categoryTree()
 
-    const categories = data.map(item => {
+      categories.value = data.map(item => {
       categoryMap[item.id] = item.categoryName// 将树形结构转换成对象
       return {
         label: item.categoryName,
         value: item.id
       }
     })
-    formItem[1].options = categories
+    formItem[1].options = categories.value
     handleSearch()
   })
 </script>
