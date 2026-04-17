@@ -36,6 +36,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination 
+    style="margin-top: 25px;"
+    :page-size="pageination.size"
+    layout="prev, pager, next"
+    :total="pageination.total" 
+    @change="handleChange"
+    />
   </div>
 </template>
 
@@ -70,6 +77,12 @@ import { Timer } from '@element-plus/icons-vue';
       ...pageination,
       ...formData
     }
+
+
+  const handleChange = (page) => {
+    pageination.currentPage = page
+    handleSearch()
+  }
 
   const { records, total} = await articlePage(params)
   tableData.value = records
