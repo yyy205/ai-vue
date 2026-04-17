@@ -59,7 +59,6 @@ const submitForm = async (formEl) => {
   await formEl.validate((valid, fields) => {
     if(valid){
       login(formData).then(data => {
-        console.log('登录响应数据:', data)
         if(!data.token){
           return console.error('登录失败')
         }
