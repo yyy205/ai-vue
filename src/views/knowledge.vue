@@ -2,8 +2,7 @@
   <div>
     <PageHead title="知识文章">
       <template #buttons>
-        <el-button type="primary">新增</el-button>
-        <el-button type="primary">编辑</el-button>
+        <el-button @click="dialogVisible = true" type="primary" >新增</el-button>
       </template>
     </PageHead>
     <TableSearch :formItem="formItem" @search="handleSearch"/>
@@ -43,6 +42,7 @@
     :total="pageination.total" 
     @change="handleChange"
     />
+    <ArticleDialog v-model:modelValue="dialogVisible" />
   </div>
 </template>
 
@@ -52,6 +52,7 @@ import PageHead from '@/components/PageHead.vue';
 import TableSearch from '@/components/TableSearch.vue';
 import { categoryTree,articlePage } from '../api/admin';
 import { Timer } from '@element-plus/icons-vue';
+import ArticleDialog from '../components/ArticleDialog.vue';
 
   const formItem = [
     { comp: 'input',prop: 'title',label: '文章标题',placeholder: '请输入文章标题' },
@@ -77,15 +78,13 @@ import { Timer } from '@element-plus/icons-vue';
       ...pageination,
       ...formData
     }
-
+  const { records, total} = await articlePage(params)
+  tableData.value = records
+  }
 
   const handleChange = (page) => {
     pageination.currentPage = page
     handleSearch()
-  }
-
-  const { records, total} = await articlePage(params)
-  tableData.value = records
   }
 // 分类
 const categoryMap = reactive({})
@@ -94,6 +93,8 @@ const categoryMap = reactive({})
 const categories =ref([])
 
 const tableData = ref([])
+
+const dialogVisible = ref(false)
 
   onMounted(async () => {
     const data = await categoryTree()
