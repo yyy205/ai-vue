@@ -36,8 +36,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { login } from "@/api/admin"
+import {useRouter} from 'vue-router'
 
 const ruleFormRef = ref()
+
+const router = useRouter()
 
 const formData = reactive({
   username: '',
@@ -59,15 +62,17 @@ const submitForm = async (formEl) => {
   await formEl.validate((valid, fields) => {
     if(valid){
       login(formData).then(data => {
-        console.log('登录响应数据:', data)
         if(!data.token){
           return console.error('登录失败')
         }
         localStorage.setItem('token', data.token)
         localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
-        window.location.href = '/'
-      }).catch(error => {
-        console.error('登录失败', error)
+        // 跳转到首页
+        if(data.userInfo.userType === 2){
+          router.push('/back/dashboard')
+        }else{
+          
+        }
       })
     }
   })
