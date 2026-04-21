@@ -42,7 +42,7 @@
     :total="pageination.total" 
     @change="handleChange"
     />
-    <ArticleDialog v-model:modelValue="dialogVisible" :categories="categories" />
+    <ArticleDialog v-model:modelValue="dialogVisible" :categories="categories" @success="handleSuccess" />
   </div>
 </template>
 
@@ -108,5 +108,9 @@ const dialogVisible = ref(false)
     })
     formItem[1].options = categories.value
     handleSearch()
+
+    const handleSuccess = () => {
+      
+    }
   })
 </script>
