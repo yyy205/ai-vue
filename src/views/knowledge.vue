@@ -28,7 +28,7 @@
       <el-table-column prop="createdAt" label="发布时间" width="200" />
       <el-table-column  label="操作" width="240" fixed="right">
         <template #default="scope">
-          <el-button text type="primary">编辑</el-button>
+          <el-button @click="handleEmit(scope.row)" text type="primary">编辑</el-button>
           <el-button v-if="scope.row.status=== 0||scope.row.status === 2" text type="success">发布</el-button>
           <el-button v-if="scope.row.status=== 1" text type="warning">下线</el-button>
           <el-button text type="danger">删除</el-button>
@@ -42,7 +42,7 @@
     :total="pageination.total" 
     @change="handleChange"
     />
-    <ArticleDialog v-model:modelValue="dialogVisible" :categories="categories" @success="handleSuccess" />
+    <ArticleDialog v-model:modelValue="dialogVisible" :article="currentArticle" :categories="categories" @success="handleSuccess" />
   </div>
 </template>
 
@@ -50,7 +50,7 @@
 import { onMounted,reactive,ref } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import TableSearch from '@/components/TableSearch.vue';
-import { categoryTree,articlePage } from '../api/admin';
+import { categoryTree,articlePage, getArticleDetail } from '../api/admin';
 import { Timer } from '@element-plus/icons-vue';
 import ArticleDialog from '../components/ArticleDialog.vue';
 
@@ -113,4 +113,19 @@ const dialogVisible = ref(false)
       
     }
   })
+
+  const currentArticle = ref(null)
+  const handleEmit = (row) => {
+    // console.log(row);
+    if(!row.id){
+      currentArticle.value = null
+      dialogVisible.value = true
+    }else{
+      //编辑
+      getArticleDetail(row.id).then(res => {
+        currentArticle.value = res
+        dialogVisible.value = true
+      })
+    }
+  }
 </script>

@@ -39,3 +39,6 @@ export function uploadFile(file, businessInfo) {  // ← 添加 businessId 参�
 export function createArticle(data) {
   return service.post('/knowledge/article',data)
 }
+export function getArticleDetail(data) {
+  return service.get('/knowledge/article/{id}',data)
+}

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      title="文章详情"
+      :title="isEmit ? '编辑文章' : '新增文章'"
       v-model="dialogVisible"
       width="50%"
       @close="handleClose"
@@ -56,7 +56,7 @@
     <template #footer>
         <el-button @click="btnPreview=!btnPreview">{{ btnPreview ? '隐藏预览' : '预览效果' }}</el-button>
         <el-button @click="handleClose">取消</el-button>
-        <el-button @click="handleSubmit" :loading="loading" type="primary">创建文章</el-button>
+        <el-button @click="handleSubmit" :loading="loading" type="primary">{{ isEmit ? '更新文章' : '创建文章' }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -76,6 +76,10 @@
     categories:{
       type:Array,
       default:()=>[]
+    },
+    article:{
+      type:Object,
+      default:null
     }
   })
 
@@ -89,6 +93,8 @@ const emit =defineEmits(['update:modelValue','success'])
       emit('update:modelValue', val)
     }
   })
+
+  const isEmit = computed(() =>!!props.article?.id)
   const handleClose = () => {
     
   }
