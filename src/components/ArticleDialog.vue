@@ -1,6 +1,10 @@
 <template>
   <el-dialog
+<<<<<<< HEAD
       :title="isEmit ? '编辑文章' : '新增文章'"
+=======
+      :title="isEdit ? '编辑文章' : '新增文章'"
+>>>>>>> main
       v-model="dialogVisible"
       width="50%"
       @close="handleClose"
@@ -56,15 +60,19 @@
     <template #footer>
         <el-button @click="btnPreview=!btnPreview">{{ btnPreview ? '隐藏预览' : '预览效果' }}</el-button>
         <el-button @click="handleClose">取消</el-button>
+<<<<<<< HEAD
         <el-button @click="handleSubmit" :loading="loading" type="primary">{{ isEmit ? '更新文章' : '创建文章' }}</el-button>
+=======
+        <el-button @click="handleSubmit" :loading="loading" type="primary">{{isEdit ? '更新文章' : '创建文章'}}</el-button>
+>>>>>>> main
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-  import { ref ,reactive,computed,nextTick} from 'vue'
+  import { ref ,reactive,computed,nextTick, watch} from 'vue'
   import{ ElMessage } from 'element-plus'
-  import { uploadFile,createArticle } from '@/api/admin.js'
+  import { uploadFile,createArticle ,updateArticle} from '@/api/admin.js'
   import { fileBaseUrl } from '@/config/index.js'
   import RichTextEditor from './RichTextEditor.vue'
 
@@ -94,10 +102,20 @@ const emit =defineEmits(['update:modelValue','success'])
     }
   })
 
+<<<<<<< HEAD
   const isEmit = computed(() =>!!props.article?.id)
+=======
+  const businessId = ref(null)
+>>>>>>> main
   const handleClose = () => {
-    
+    //重置表单
+    formRef.value.resetFields()
+    businessId.value = null
+    formData.tagArray = []
+    handleRemove()
+    emit('update:modelValue', false)
   }
+
   //表单数据
   const formData = reactive({
     "title": "",
@@ -149,14 +167,18 @@ const emit =defineEmits(['update:modelValue','success'])
   }
 
   const handleUploadRequest = async({file}) => {
-    const businessId =crypto.randomUUID()
+    businessId.value =crypto.randomUUID()
     const fileRes = await uploadFile(file,{
-      businessId:businessId,
+      businessId:businessId.value,
     })
     imgUrl.value = fileBaseUrl + fileRes.filePath
     formData.coverImage = fileRes.filePath
   }
 
+  const handleRemove = () => {
+    imgUrl.value = ''
+    formData.coverImage = ''
+  }
   
   const  handleContentChange = (data) => {
     formData.content = data.html
@@ -189,13 +211,35 @@ const handleSubmit = () => {
       }
       delete submitData.tagArray
 
+      if(!isEdit.value) {
       createArticle(submitData).then(res => {
         loading.value = false
         ElMessage.success('创建文章成功')
         emit('success')
-      })
+      })}else {
+        updateArticle(props.article.id,submitData).then(res => {
+          loading.value =false
+          emit('success')
+        })
+      }
+
+
   })
 }
+const isEdit = computed(() => !!props.article?.id)
+
+watch(() =>props.article, (newVal) => {
+  if(newVal){
+    nextTick(() =>{
+    Object.assign(formData,newVal)
+    //使用现有的ID
+    businessId.value = newVal.id
+    //封面Url
+    imgUrl.value =fileBaseUrl + newVal.coverImage
+    })
+
+  }
+})
 
 </script>
 <style lang="scss" scoped>
