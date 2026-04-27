@@ -1,10 +1,6 @@
 <template>
   <el-dialog
-<<<<<<< HEAD
       :title="isEmit ? '编辑文章' : '新增文章'"
-=======
-      :title="isEdit ? '编辑文章' : '新增文章'"
->>>>>>> main
       v-model="dialogVisible"
       width="50%"
       @close="handleClose"
@@ -60,11 +56,7 @@
     <template #footer>
         <el-button @click="btnPreview=!btnPreview">{{ btnPreview ? '隐藏预览' : '预览效果' }}</el-button>
         <el-button @click="handleClose">取消</el-button>
-<<<<<<< HEAD
         <el-button @click="handleSubmit" :loading="loading" type="primary">{{ isEmit ? '更新文章' : '创建文章' }}</el-button>
-=======
-        <el-button @click="handleSubmit" :loading="loading" type="primary">{{isEdit ? '更新文章' : '创建文章'}}</el-button>
->>>>>>> main
     </template>
   </el-dialog>
 </template>
@@ -102,11 +94,7 @@ const emit =defineEmits(['update:modelValue','success'])
     }
   })
 
-<<<<<<< HEAD
   const isEmit = computed(() =>!!props.article?.id)
-=======
-  const businessId = ref(null)
->>>>>>> main
   const handleClose = () => {
     //重置表单
     formRef.value.resetFields()

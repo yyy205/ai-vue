@@ -28,17 +28,10 @@
       <el-table-column prop="createdAt" label="发布时间" width="200" />
       <el-table-column  label="操作" width="240" fixed="right">
         <template #default="scope">
-<<<<<<< HEAD
-          <el-button @click="handleEmit(scope.row)" text type="primary">编辑</el-button>
-          <el-button v-if="scope.row.status=== 0||scope.row.status === 2" text type="success">发布</el-button>
-          <el-button v-if="scope.row.status=== 1" text type="warning">下线</el-button>
-          <el-button text type="danger">删除</el-button>
-=======
           <el-button @click="handleEdit(scope.row)" text type="primary">编辑</el-button>
           <el-button @click="handlePublish(scope.row)" v-if="scope.row.status=== 0||scope.row.status === 2" text type="success">发布</el-button>
           <el-button @click="handleUnPublish(scope.row)" v-if="scope.row.status=== 1" text type="warning">下线</el-button>
           <el-button @click="handleDelete(scope.row)" text type="danger">删除</el-button>
->>>>>>> main
         </template>
       </el-table-column>
     </el-table>
@@ -57,11 +50,7 @@
 import { onMounted,reactive,ref } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import TableSearch from '@/components/TableSearch.vue';
-<<<<<<< HEAD
-import { categoryTree,articlePage, getArticleDetail } from '../api/admin';
-=======
 import { categoryTree,articlePage,getArticleDetail ,changeArticleStatus,deleteArticle} from '../api/admin';
->>>>>>> main
 import { Timer } from '@element-plus/icons-vue';
 import ArticleDialog from '../components/ArticleDialog.vue';
 import { ElMessageBox, ElMessage} from 'element-plus';
@@ -84,6 +73,7 @@ import { ElMessageBox, ElMessage} from 'element-plus';
   })
 
   const handleSearch = async (formData) => {
+
     
     const params = {
       ...pageination,
@@ -123,24 +113,6 @@ const currentArticle = ref(null)
     formItem[1].options = categories.value
     handleSearch()
   })
-<<<<<<< HEAD
-
-  const currentArticle = ref(null)
-  const handleEmit = (row) => {
-    // console.log(row);
-    if(!row.id){
-      currentArticle.value = null
-      dialogVisible.value = true
-    }else{
-      //编辑
-      getArticleDetail(row.id).then(res => {
-        currentArticle.value = res
-        dialogVisible.value = true
-      })
-    }
-  }
-</script>
-=======
   const handleSuccess = () => {
     dialogVisible.value = false
     // pageination.currentPage = 1 // After create/update, jump back to first page to show latest list
@@ -211,4 +183,3 @@ const currentArticle = ref(null)
     })      
    }
 </script>
->>>>>>> main

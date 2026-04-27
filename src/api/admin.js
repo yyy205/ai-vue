@@ -39,10 +39,6 @@ export function uploadFile(file, businessInfo) {  // ← 添加 businessId 参�
 export function createArticle(data) {
   return service.post('/knowledge/article',data)
 }
-<<<<<<< HEAD
-export function getArticleDetail(data) {
-  return service.get('/knowledge/article/{id}',data)
-=======
 
 export function getArticleDetail(id) {
   //{id}只是普通字符串，不是变量
@@ -59,5 +55,4 @@ export function changeArticleStatus(id,data) {
 
 export function deleteArticle(id) {
   return service.delete(`/knowledge/article/${id}`)
->>>>>>> main
 }
