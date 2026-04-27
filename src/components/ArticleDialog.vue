@@ -64,7 +64,7 @@
 <script setup>
   import { ref ,reactive,computed,nextTick, watch} from 'vue'
   import{ ElMessage } from 'element-plus'
-  import { uploadFile,createArticle } from '@/api/admin.js'
+  import { uploadFile,createArticle ,updateArticle} from '@/api/admin.js'
   import { fileBaseUrl } from '@/config/index.js'
   import RichTextEditor from './RichTextEditor.vue'
 
@@ -199,11 +199,19 @@ const handleSubmit = () => {
       }
       delete submitData.tagArray
 
+      if(!isEdit.value) {
       createArticle(submitData).then(res => {
         loading.value = false
         ElMessage.success('创建文章成功')
         emit('success')
-      })
+      })}else {
+        updateArticle(props.article.id,submitData).then(res => {
+          loading.value =false
+          emit('success')
+        })
+      }
+
+
   })
 }
 const isEdit = computed(() => !!props.article?.id)
