@@ -113,6 +113,7 @@ const emit =defineEmits(['update:modelValue','success'])
     "summary": "",
     "tags": "",
     "id": "",
+    "tagArray": [],  
   })
 
   const rules = reactive({
@@ -186,35 +187,33 @@ const btnPreview =ref(false)
 
 const formRef = ref()
 const loading = ref(false)
-const handleSubmit = () => {
-  //表单校验
-  formRef.value.validate((valid,fileds) => {
-      if (valid) {
-        loading.value = true
-      }
-      console.log(formData)
-      const submitData = {
-        ...formData,
-        tags:formData.tagArray.join(',')
-      }
-      delete submitData.tagArray
+const businessId = ref(null)  // ← 加上这行，放在其他 ref 定义附近
 
-      if(!isEdit.value) {
+const handleSubmit = () => {
+  formRef.value.validate((valid) => {
+    if (!valid) return  // ← 校验失败直接返回
+    
+    loading.value = true
+    const submitData = {
+      ...formData,
+      tags: formData.tagArray.join(',')
+    }
+    delete submitData.tagArray
+
+    if (!isEmit.value) {
       createArticle(submitData).then(res => {
         loading.value = false
         ElMessage.success('创建文章成功')
         emit('success')
-      })}else {
-        updateArticle(props.article.id,submitData).then(res => {
-          loading.value =false
-          emit('success')
-        })
-      }
-
-
+      })
+    } else {
+      updateArticle(props.article.id, submitData).then(res => {
+        loading.value = false
+        emit('success')
+      })
+    }
   })
 }
-const isEdit = computed(() => !!props.article?.id)
 
 watch(() =>props.article, (newVal) => {
   if(newVal){

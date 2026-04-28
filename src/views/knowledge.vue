@@ -57,7 +57,7 @@ import { ElMessageBox, ElMessage} from 'element-plus';
 
   const formItem = [
     { comp: 'input',prop: 'title',label: '文章标题',placeholder: '请输入文章标题' },
-    { comp: 'select',prop: 'category',label: '分类',placeholder: '请选择文章分类' },
+    { comp: 'select',prop: 'categoryId',label: '分类',placeholder: '请选择文章分类' },
     { comp: 'select',prop:'status',label:'状态',placeholder:'请选择文章状态',options:[
       { label: '草稿', value: 0 },
       { label: '已发布', value: 1 },
@@ -116,6 +116,7 @@ const currentArticle = ref(null)
   const handleSuccess = () => {
     dialogVisible.value = false
     // pageination.currentPage = 1 // After create/update, jump back to first page to show latest list
+    pagination.currentPage = 1 
     handleSearch()
   }
 
