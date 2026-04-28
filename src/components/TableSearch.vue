@@ -1,9 +1,11 @@
 <template>
+  <!-- 单向绑定，同一个对象的引用（formData） -->
   <el-form ref="ruleFormRef" :model="formData">
     <el-row :gutter="24">
       <template v-for="item in formItemAttrs" :key="item.prop">
         <el-col v-bind="item.col">
           <el-form-item :label="item.label" :prop="item.prop">
+            <!-- 双向绑定组件值，实时更新formData数据 -->
             <component v-model="formData[item.prop]":is="isComp(item.comp)" :placeholder="item.placeholder">
               <template v-if="item.comp === 'select'">
                 <el-option label="全部" value=""></el-option>
