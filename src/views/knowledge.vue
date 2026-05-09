@@ -37,9 +37,9 @@
     </el-table>
     <el-pagination 
     style="margin-top: 25px;"
-    :page-size="pageination.size"
+    :page-size="pagination.size"
     layout="prev, pager, next"
-    :total="pageination.total" 
+    :total="pagination.total" 
     @change="handleChange"
     />
     <ArticleDialog v-model:modelValue="dialogVisible" :article="currentArticle" :categories="categories" @success="handleSuccess" />
@@ -66,7 +66,7 @@ import { ElMessageBox, ElMessage} from 'element-plus';
   ]
 
   //分页参数
-  const pageination = reactive({
+  const pagination = reactive({
     currentPage: 1,
     size: 10,
     total: 0
@@ -76,16 +76,16 @@ import { ElMessageBox, ElMessage} from 'element-plus';
 
     
     const params = {
-      ...pageination,
+      ...pagination,
       ...formData
     }
   const { records, total} = await articlePage(params)
   tableData.value = records
-  pageination.total = total // Keep pagination total in sync with backend result
+  pagination.total = total // Keep pagination total in sync with backend result
   }
 
   const handleChange = (page) => {
-    pageination.currentPage = page
+    pagination.currentPage = page
     handleSearch()
   }
 // 分类

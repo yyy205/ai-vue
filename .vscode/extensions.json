@@ -2,6 +2,7 @@
   "recommendations": [
     "Vue.volar",
     "github.copilot-chat",
-    "codeium.codeium"
+    "codeium.codeium",
+    "anthropic.claude-code"
   ]
 }

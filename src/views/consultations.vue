@@ -24,9 +24,9 @@
     </el-table>
     <el-pagination 
     style="margin-top: 25px;"
-    :page-size="pageination.size"
+    :page-size="pagination.size"
     layout="prev, pager, next"
-    :total="pageination.total" 
+    :total="pagination.total" 
     @change="handleChange"
     />
     <el-dialog
@@ -79,7 +79,7 @@ import { getConsultationPage,getSessionDetail } from '../api/admin';
 
 const tableData = ref([])
 
-const pageination = reactive({
+const pagination = reactive({
   currentPage: 1,
   size: 10,
   total: 0
@@ -103,15 +103,15 @@ const viewSessionDetail = (row) => {
 }
 
 const handleChange = (page)=>{
-  pageination.currentPage = page
+  pagination.currentPage = page
   handleSearch()
 }
 
 const handleSearch = async () => {
-  getConsultationPage(pageination).then(res => {
+  getConsultationPage(pagination).then(res => {
     const { records, total} = res
     tableData.value = records
-    pageination.total = total
+    pagination.total = total
   })
 }
 
