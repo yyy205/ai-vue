@@ -37,9 +37,9 @@
     </el-table>
     <el-pagination 
     style="margin-top: 25px;"
-    :page-size="pageination.size"
+    :page-size="pagination.size"
     layout="prev, pager, next"
-    :total="pageination.total" 
+    :total="pagination.total" 
     @change="handleChange"
     />
     <ArticleDialog v-model:modelValue="dialogVisible" :article="currentArticle" :categories="categories" @success="handleSuccess" />
@@ -57,7 +57,7 @@ import { ElMessageBox, ElMessage} from 'element-plus';
 
   const formItem = [
     { comp: 'input',prop: 'title',label: '文章标题',placeholder: '请输入文章标题' },
-    { comp: 'select',prop: 'category',label: '分类',placeholder: '请选择文章分类' },
+    { comp: 'select',prop: 'categoryId',label: '分类',placeholder: '请选择文章分类' },
     { comp: 'select',prop:'status',label:'状态',placeholder:'请选择文章状态',options:[
       { label: '草稿', value: 0 },
       { label: '已发布', value: 1 },
@@ -66,7 +66,7 @@ import { ElMessageBox, ElMessage} from 'element-plus';
   ]
 
   //分页参数
-  const pageination = reactive({
+  const pagination = reactive({
     currentPage: 1,
     size: 10,
     total: 0
@@ -76,16 +76,16 @@ import { ElMessageBox, ElMessage} from 'element-plus';
 
     
     const params = {
-      ...pageination,
+      ...pagination,
       ...formData
     }
   const { records, total} = await articlePage(params)
   tableData.value = records
-  pageination.total = total // Keep pagination total in sync with backend result
+  pagination.total = total // Keep pagination total in sync with backend result
   }
 
   const handleChange = (page) => {
-    pageination.currentPage = page
+    pagination.currentPage = page
     handleSearch()
   }
 // 分类
@@ -116,6 +116,7 @@ const currentArticle = ref(null)
   const handleSuccess = () => {
     dialogVisible.value = false
     // pageination.currentPage = 1 // After create/update, jump back to first page to show latest list
+    pagination.currentPage = 1 
     handleSearch()
   }
 
