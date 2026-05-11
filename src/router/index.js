@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BackendLayout from '@/components/BackendLayout.vue'
 
 import AuthLayout from '@/components/AuthLayout.vue'
+
+import FrontendLayout from '@/components/FrontendLayout.vue'
 //路由配置
 const backendRoutes = [
   {
@@ -66,11 +68,37 @@ const backendRoutes = [
      ]
   }
 ]
+
+const frontendRoutes = [
+  {
+    path: '/',
+    component: () => import('@/components/FrontendLayout.vue'),
+    children:[
+      {
+        path: '',
+        component: () => import('@/views/home.vue'),
+      },
+      {
+        path: 'consultation',
+        component: () => import('@/views/consultation.vue'),
+      },
+      {
+        path: 'emotion-diary',
+        component: () => import('@/views/emotionDiary.vue'),
+      },
+      {
+        path: 'knowledge',
+        component: () => import('@/views/frontendKnowledge.vue'),
+      }
+    ]
+  }
+]
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: backendRoutes
+  routes: [...backendRoutes, ...frontendRoutes]
 })
-//路由守卫
+//路由守卫(全局前置守卫)
 router.beforeEach((to,from,next) => {
    const token = localStorage.getItem('token')
    if(token){
@@ -85,7 +113,13 @@ router.beforeEach((to,from,next) => {
         }
       }
       else if(userInfo.userType == 1){
-        
+        //普通用户只能访问前台路由
+        if(to.path.startsWith('/back')||to.path.startsWith('/auth')){
+          next('/')
+        }
+        else{
+          next()
+        }
       }
    }
    else{

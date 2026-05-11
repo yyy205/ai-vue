@@ -136,9 +136,7 @@
   }
 
   const initEmotionChart = () => {
-    // console.log('chart ref:', emotionChartRef.value)
     if(!emotionChartRef.value)return;
-    //销毁之前的实例
     if(emotionChart) {
       emotionChart.dispose();
     }
