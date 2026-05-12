@@ -43,21 +43,105 @@
           </div>
         </div>
       </div>
+      <div class="chat-input">
+        <div class="input-container">
+          <el-input
+            v-model="userMessage"
+            placeholder="请输入你想要分享的内容..."
+            type="textarea"
+            :row="3"
+            :disabled="isAiTyping"
+            @keydown="handleKeyDown"
+            class="message-input"
+            clearable
+          />
+        </div>
+        <el-button type="primary" class="send-btn" @click="sendMessage">
+          <el-icon>
+            <Promotion />
+          </el-icon>
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { ref,onMounted } from 'vue';
+  import { startSession } from '../api/frontend';
+  import { ElMessage } from 'element-plus';
 
   const iconUrl = new URL('@/assets/images/robot-fill.png', import.meta.url).href;
   const avatarUrl = new URL('@/assets/images/like.png', import.meta.url).href;
+
   const createNewFrontendSession = () => {
-    // 创建新会话的逻辑
+    // 创建新会话的对象
+    const newSession = {
+      sessionId: `temp_${Date.now()}`,
+      status: 'TEMP',
+      sessionTitle: '新会话',
+    }
+    currentSession.value = newSession;
   }
+  const currentSession = ref(null);
 
   const message =ref([])
+  const userMessage = ref('')
+  const isAiTyping = ref(false)
 
+  const sendMessage = () => {
+    if(!userMessage.value.trim()) return;
+
+    if(isAiTyping.value) {
+      ElMessage.warning('AI正在回复，请稍后...')
+      return;
+    }
+    const message = userMessage.value.trim(); // 清除用户输入的空格
+    userMessage.value = ''; // 清空输入框
+
+    //如果没有会话或临时会话，需要创建一个新会话
+    if(currentSession.value.status === 'TEMP') {
+      startNewSession(message);
+    }
+  }
+
+  const startNewSession = (message) => {
+    const sessionParams = {
+      initMessage: message,
+
+    }
+    if(currentSession.value.sessionTitle === '新对话'){
+      sessionParams.sessionTitle = `宁渡AI助手-${new Date().toLocaleString()}`; // 使用当前时间作为会话标题
+    }else {
+      sessionParams.sessionTitle = currentSession.value.sessionTitle;
+    }
+    startSession(sessionParams).then(response => {
+      const sesionData = {
+        sessionId: res.sessionId,
+        status: res.status,
+        sessionTitle: sessionParams.sessionTitle,
+      }
+      if(currentSession.value && currentSession.value.status === 'TEMP') {
+        Object.assign(currentSession.value, sesionData);
+      }else{
+        currentSession.value = sesionData;
+      }
+    });
+  }
+
+  const handleKeyDown = (e) => {
+    if(e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+
+    }
+  }
+
+  
+
+  onMounted(() => {
+    // 页面加载时创建一个默认会话
+    createNewFrontendSession();
+  })
 </script>
 
 <style lang="scss" scoped>
