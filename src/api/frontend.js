@@ -7,3 +7,15 @@ export function register(data) {
 export function startSession(data) {
   return service.post('/psychological-chat/session/start', data)
 }
+
+export function getSessionList(params) {
+  return service.get('/psychological-chat/sessions', {params})
+}
+
+export function deleteSession(sessionId) {
+  return service.delete(`/psychological-chat/session/${sessionId}`)
+}
+
+export function getSessionDetail(sessionId) {
+  return service.get(`/psychological-chat/sessions/${sessionId}/messages`)
+}
