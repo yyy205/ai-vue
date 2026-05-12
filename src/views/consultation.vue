@@ -12,45 +12,6 @@
           在线服务中
         </div>
        </div>
-       <div class="session-history">
-        <h4 class="session-title">会话列表</h4>
-        <div class="session-list">
-            <div v-for="session in sessionList " :key="session.id" @click="handleSessionClick(session)" class="session-item">
-                <div class="session-info">
-                    <div class="session-title">
-                        <span>{{ session.sessionTitle }}</span>
-                        <div class="session-meta">
-                            <span class="session-time">{{ session.startedAt }}</span>
-                        </div>
-                        <div class="session-preview">
-                            {{ session.lastMessageContent }}
-                        </div>
-                        <div class="session-stats">
-                            <span>
-                                <el-icon>
-                                    <ChatRound />
-                                </el-icon>
-                                {{ session.messageCount || 0 }}
-                            </span>
-                            <span>
-                                <el-icon>
-                                    <Clock />
-                                </el-icon>
-                                {{ session.durationMinutes || 0 }}分钟
-                            </span>                          
-                        </div>
-                    </div>
-                    <div class="session-actions">
-                        <el-button text type="danger" size="small" @click="handleDeleteSession(session.id)">
-                            <el-icon>
-                                <DeleteFilled />
-                            </el-icon>
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-       </div>
     </div>
     <div class="chat-main">
       <div class="chat-header">
@@ -82,129 +43,21 @@
           </div>
         </div>
       </div>
-      <div class="chat-input">
-        <div class="input-container">
-          <el-input
-            v-model="userMessage"
-            placeholder="请输入你想要分享的内容..."
-            type="textarea"
-            :row="3"
-            :disabled="isAiTyping"
-            @keydown="handleKeyDown"
-            class="message-input"
-            clearable
-          />
-        </div>
-        <el-button type="primary" class="send-btn" @click="sendMessage">
-          <el-icon>
-            <Promotion />
-          </el-icon>
-        </el-button>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref,onMounted } from 'vue';
-  import { startSession, getSessionList ,deleteSession } from '../api/frontend';
-  import { ElMessage } from 'element-plus';
+  import { ref } from 'vue';
 
   const iconUrl = new URL('@/assets/images/robot-fill.png', import.meta.url).href;
   const avatarUrl = new URL('@/assets/images/like.png', import.meta.url).href;
-
   const createNewFrontendSession = () => {
-    // 创建新会话的对象
-    const newSession = {
-      sessionId: `temp_${Date.now()}`,
-      status: 'TEMP',
-      sessionTitle: '新会话',
-    }
-    currentSession.value = newSession;
+    // 创建新会话的逻辑
   }
-  const currentSession = ref(null);
-  const sessionList = ref([]);
 
   const message =ref([])
-  const userMessage = ref('')
-  const isAiTyping = ref(false)
 
-  const getSessionPage = () => {
-    getSessionList({
-        pageNum: 1,
-        pageSize: 10
-    }).then(res => {
-        // console.log(res)
-        sessionList.value = res.records;
-    })
-  }
-
-  const sendMessage = () => {
-    console.log('sendMessage 被调用')
-    console.log('currentSession:', currentSession.value)
-    if(!userMessage.value.trim()) return;
-
-    if(isAiTyping.value) {
-      ElMessage.warning('AI正在回复，请稍后...')
-      return;
-    }
-    const message = userMessage.value.trim(); // 清除用户输入的空格
-    userMessage.value = ''; // 清空输入框
-
-    //如果没有会话或临时会话，需要创建一个新会话
-    if(currentSession.value.status === 'TEMP') {
-      startNewSession(message);
-    }
-  }
-
-  const startNewSession = (message) => {
-    const sessionParams = {
-      initMessage: message,
-
-    }
-    if(currentSession.value.sessionTitle === '新会话'){
-      sessionParams.sessionTitle = `宁渡AI助手-${new Date().toLocaleString()}`; // 使用当前时间作为会话标题
-    }else {
-      sessionParams.sessionTitle = currentSession.value.sessionTitle;
-    }
-    startSession(sessionParams).then(res => {
-      const sesionData = {
-        sessionId: res.sessionId,
-        status: res.status,
-        sessionTitle: sessionParams.sessionTitle,
-      }
-      if(currentSession.value && currentSession.value.status === 'TEMP') {
-        Object.assign(currentSession.value, sesionData);
-      }else{
-        currentSession.value = sesionData;
-      }
-      getSessionPage();
-    });
-  }
-
-  const handleKeyDown = (e) => {
-    if(e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-        sendMessage()
-    }
-  }
-
-  const handleSessionClick = (session) => {
-      
-  }
-  
-
-  const handleDeleteSession = (sessionId) => {
-      deleteSession(sessionId).then(res => {
-          ElMessage.success('删除成功')
-          getSessionPage()
-      })
-  }
-
-  onMounted(() => {
-    getSessionPage(); // 页面加载时获取会话列表
-    createNewFrontendSession();
-  })
 </script>
 
 <style lang="scss" scoped>

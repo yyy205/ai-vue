@@ -3,15 +3,3 @@ import service from "@/utils/request";
 export function register(data) {
   return service.post('/user/add',data)
 }
-
-export function startSession(data) {
-  return service.post('/psychological-chat/session/start', data)
-}
-
-export function getSessionList(params) {
-  return service.get('/psychological-chat/sessions', { params })
-}
-
-export function deleteSession(sessionId) {
-  return service.delete(`/psychological-chat/sessions/${sessionId}`)
-}
