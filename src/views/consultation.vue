@@ -12,6 +12,36 @@
           在线服务中
         </div>
        </div>
+       <div class="emotion-garden">
+        <div class="garden-header">
+            <div class="garden-title">情绪花园</div>
+        </div>
+        <div class="emotion-info">
+            <div class="emotion-name">中性</div>
+            <div class="emotion-score">50</div>
+        </div>
+        <div class="warm-tips">
+            <div class="emotion-status-text">
+                <span class="status-label">今天感觉</span>
+                <span class="status-emotion">{{ currentEmotion.isNegative ? '需要关注':'很不错' }}</span>
+            </div>
+            <div class="emotion-intensity">
+                <span class="intensity-dots">
+                    <span v-for="dot in 3" :key="dot" class="dot" :class="{'active': getIntensityClass(currentEmotion.emotionScore) >= dot}"></span>
+                </span>
+                <span class="intensity-text">
+                    {{ getRiskText(currentEmotion.emotionScore) }}
+                </span>
+            </div>
+            <div class="warm-suggestion" v-if="currentEmotion.suggestion">
+                <div class="suggestion-icon">💝</div>
+                <div class="suggestion-content">
+                    <div class="suggestion-title">给你的小建议</div>
+                    <div class="suggestion-text">{{ currentEmotion.suggestion }}</div>
+                </div>
+            </div>
+        </div>
+       </div>
        <div class="session-history">
         <h4 class="session-title">会话列表</h4>
         <div class="session-list">
@@ -139,7 +169,6 @@
   import MarkdownRenderer from '../components/MarkdownRenderer.vue';
   import { ChatRound,DeleteFilled } from '@element-plus/icons-vue';
   import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { id } from 'element-plus/es/locale/index.mjs';
 
   const iconUrl = new URL('@/assets/images/robot-fill.png', import.meta.url).href;
   const avatarUrl = new URL('@/assets/images/like.png', import.meta.url).href;
@@ -160,6 +189,37 @@ import { id } from 'element-plus/es/locale/index.mjs';
   const messages =ref([])
   const userMessage = ref('')
   const isAiTyping = ref(false)
+  const currentEmotion =ref({
+    primaryEmotion: '中性',
+    emotionScore: 50,
+    isNegative: false,
+    riskLevel: 0,
+    suggestion: '情绪状态平稳'
+  })
+
+  const getIntensityClass = (score) => {
+    if(score >= 61){
+        return 3
+    }
+    if(score >= 31){
+        return 2
+    }
+    return 1
+}
+const getRiskText = (level) => {
+    switch (level) {
+        case 0:
+            return '正常';
+        case 1:
+            return '关注';
+        case 2:
+            return '预警';
+        case 3:
+            return '危机';
+        default:
+            return '正常'
+    }
+}
 
   const getSessionPage = () => {
     getSessionList({
