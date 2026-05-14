@@ -40,6 +40,15 @@
                     <div class="suggestion-text">{{ currentEmotion.suggestion }}</div>
                 </div>
             </div>
+            <div class="healing-actions" v-if="currentEmotion.improvementSuggestions">
+                <div class="actions-title">治愈小行动</div>
+                <div class="actions-list">
+                    <div v-for="action in currentEmotion.improvementSuggestion" :key="action" class="action-item">
+                        <div class="action-icon">✨</div>
+                        <div class="action-text">{{ action }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
        </div>
        <div class="session-history">
@@ -194,7 +203,8 @@
     emotionScore: 50,
     isNegative: false,
     riskLevel: 0,
-    suggestion: '情绪状态平稳'
+    suggestion: '情绪状态平稳',
+    mprovementSuggestion:[]
   })
 
   const getIntensityClass = (score) => {
