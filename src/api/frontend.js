@@ -19,3 +19,11 @@ export function deleteSession(sessionId) {
 export function getSessionDetail(sessionId) {
   return service.get(`/psychological-chat/sessions/${sessionId}/messages`)
 }
+
+export function getSessionEmotion(sessionId) {
+  return service.get(`/psychological-chat/session/${sessionId}/emotion`)
+}
+
+export function addEmotionDiary(data){
+  return service.post('/emotion-diary', data)
+}
